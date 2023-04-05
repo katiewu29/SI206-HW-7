@@ -105,7 +105,11 @@ def nationality_search(countries, cur, conn):
 
 
 def birthyear_nationality_search(age, country, cur, conn):
-    pass
+    tup_lst = []
+    birth_year = 2023 - age
+    cur.execute("SELECT name, nationality, birthyear FROM Players WHERE nationality = ? AND birthyear < ?", (country, birth_year))
+    tup_lst.extend(cur.fetchall())
+    return tup_lst
 
 ## [TASK 4]: 15 points
 # finish the function position_birth_search
