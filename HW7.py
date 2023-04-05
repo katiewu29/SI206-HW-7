@@ -1,7 +1,7 @@
 
-# Your name:
+# Your name: Katie
 # Your student id:
-# Your email:
+# Your email: katiewu@umich.edu
 # List who you have worked with on this project:
 
 import unittest
@@ -49,11 +49,26 @@ def make_positions_table(data, cur, conn):
 #         birthyear (datatype: int)
 #         nationality (datatype: text)
 #     To find the position_id for each player, you will have to look up 
-#     the position in the Positions table we 
+#     the prosition in the Positions table we 
 #     created for you -- see make_positions_table above for details.
 
+#use select statements to print out what I'm grabbing to see if it is right
 def make_players_table(data, cur, conn):
-    pass
+    cur.execute("CREATE TABLE IF NOT EXISTS Players (id INTEGER PRIMARY KEY, name TEXT, position_id INTEGER, birthyear INTEGER, nationality TEXT)")
+    for player in data['squad']:
+        id = player['id']
+        name = player['name']
+        position = player['position']
+        bday = player['dateOfBirth']
+        yr = bday.split('-')[0]
+        birthyear = int(yr)
+        nationality = player['nationality']
+        cur.execute("SELECT id FROM Positions WHERE position = ?", (position,))
+        pos_id = cur.fetchone()[0]
+        #need insert or ignore into to avoid duplicate data 
+        cur.execute("INSERT OR IGNORE INTO Players (id, name, position_id, birthyear, nationality) VALUES (?,?,?,?,?)",(id, name, pos_id, birthyear, nationality))
+    conn.commit()
+
 
 ## [TASK 2]: 10 points
 # Finish the function nationality_search
@@ -105,7 +120,7 @@ def birthyear_nationality_search(age, country, cur, conn):
     # HINT: You'll have to use JOIN for this task.
 
 def position_birth_search(position, age, cur, conn):
-       pass
+    pass
 
 
 # [EXTRA CREDIT]
@@ -206,14 +221,14 @@ class TestAllMethods(unittest.TestCase):
     
     # test extra credit
     def test_make_winners_table(self):
-        self.cur2.execute('SELECT * from Winners')
-        winners_list = self.cur2.fetchall()
+        # self.cur2.execute('SELECT * from Winners')
+        # winners_list = self.cur2.fetchall()
 
         pass
 
     def test_make_seasons_table(self):
-        self.cur2.execute('SELECT * from Seasons')
-        seasons_list = self.cur2.fetchall()
+        # self.cur2.execute('SELECT * from Seasons')
+        # seasons_list = self.cur2.fetchall()
 
         pass
 
