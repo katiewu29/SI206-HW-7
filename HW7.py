@@ -81,7 +81,12 @@ def make_players_table(data, cur, conn):
         # the player's name, their position_id, and their nationality.
 
 def nationality_search(countries, cur, conn):
-    pass
+    tup_list = []
+    for c in countries:
+        cur.execute("SELECT name, position_id, nationality FROM Players WHERE nationality = ?", (c,))
+        #is fetch all instead of fetchone bc there can be multiple people with the same nationality and we want all of them
+        tup_list.extend(cur.fetchall())
+    return tup_list
 
 ## [TASK 3]: 10 points
 # finish the function birthyear_nationality_search
